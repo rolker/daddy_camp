@@ -9,22 +9,43 @@ const state = {
 const assets = {
     base: ['base_boy.svg', 'base_girl.svg'],
     hair: ['hair1.svg', 'hair2.svg', 'hair3.svg', 'hair4.svg', 'hair5.svg', 'hair6.svg', 'hair7.svg'],
-    hairColors: ['#5d4037', '#fbc02d', '#ef5350', '#8d6e63', '#ec407a', '#3e2723', '#000000', '#ffffff'],
+    hairColors: ['#5d4037', '#fbc02d', '#ef5350', '#8d6e63', '#ec407a', '#3e2723', '#000000', '#ffffff', '#9c27b0', '#00bcd4'],
     shirt: ['shirt1.svg', 'shirt2.svg', 'shirt3.svg'],
     pants: ['pants1.svg', 'pants2.svg', 'pants3.svg']
 };
 
-function updatePreview() {
+// Cache for SVG text to avoid repeated network requests
+const svgCache = {};
+
+async function getSvg(url) {
+    if (svgCache[url]) return svgCache[url];
+    const response = await fetch(url);
+    const text = await response.text();
+    svgCache[url] = text;
+    return text;
+}
+
+async function updatePreview() {
     console.log('Updating preview with state:', state);
     
-    // Set character part images
-    document.getElementById('layer-base').style.backgroundImage = `url('assets/${assets.base[state.base]}')`;
-    document.getElementById('layer-hair').style.backgroundImage = `url('assets/hair/${assets.hair[state.hair]}')`;
+    // 1. Update Base
+    const baseUrl = `assets/${assets.base[state.base]}`;
+    document.getElementById('layer-base').style.backgroundImage = `url('${baseUrl}')`;
+
+    // 2. Update Hair (with color injection)
+    const hairUrl = `assets/hair/${assets.hair[state.hair]}`;
+    let hairSvg = await getSvg(hairUrl);
+    
+    // Replace the color variable in the SVG string
+    const coloredHairSvg = hairSvg.replace(/var\(--hair-color\)/g, assets.hairColors[state.hairColor]);
+    
+    // Convert to Data URI so it works as a background image
+    const encodedHair = btoa(coloredHairSvg);
+    document.getElementById('layer-hair').style.backgroundImage = `url('data:image/svg+xml;base64,${encodedHair}')`;
+
+    // 3. Update Shirt & Pants
     document.getElementById('layer-shirt').style.backgroundImage = `url('assets/shirt/${assets.shirt[state.shirt]}')`;
     document.getElementById('layer-pants').style.backgroundImage = `url('assets/pants/${assets.pants[state.pants]}')`;
-
-    // Apply hair color using CSS variable
-    document.documentElement.style.setProperty('--hair-color', assets.hairColors[state.hairColor]);
 }
 
 function handleControlClick(event) {
@@ -35,7 +56,6 @@ function handleControlClick(event) {
     const isNext = event.target.classList.contains('next');
     const isPrev = event.target.classList.contains('prev');
 
-    // Handle index wrapping for different array names
     let arrayLength;
     if (category === 'hairColor') {
         arrayLength = assets.hairColors.length;
@@ -59,6 +79,5 @@ document.addEventListener('DOMContentLoaded', () => {
         alert('Character saved! (State: ' + JSON.stringify(state) + ')');
     });
 
-    // Initial render
     updatePreview();
 });

@@ -1,4 +1,4 @@
-const CACHE_NAME = 'daddy-camp-v6';
+const CACHE_NAME = 'daddy-camp-v7';
 const ASSETS_TO_CACHE = [
     '/',
     '/index.html',
