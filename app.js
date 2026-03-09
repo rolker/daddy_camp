@@ -7,7 +7,7 @@ const state = {
 
 const assets = {
     base: ['base_boy.svg', 'base_girl.svg'],
-    hair: ['hair1.svg', 'hair2.svg', 'hair3.svg'],
+    hair: ['hair1.svg', 'hair2.svg', 'hair3.svg', 'hair4.svg', 'hair5.svg', 'hair6.svg'],
     shirt: ['shirt1.svg', 'shirt2.svg', 'shirt3.svg'],
     pants: ['pants1.svg', 'pants2.svg', 'pants3.svg']
 };
