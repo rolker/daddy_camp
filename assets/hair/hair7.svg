@@ -1,5 +1,5 @@
 <svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges">
+  <!-- Top and sides that flow down to the shoulders -->
   <rect x="11" y="3" width="10" height="6" fill="var(--hair-color)" />
-  <rect x="10" y="5" width="2" height="6" fill="var(--hair-color)" />
-  <rect x="20" y="5" width="2" height="6" fill="var(--hair-color)" />
+  <rect x="10" y="5" width="12" height="15" fill="var(--hair-color)" />
 </svg>

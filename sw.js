@@ -1,4 +1,4 @@
-const CACHE_NAME = 'daddy-camp-v5';
+const CACHE_NAME = 'daddy-camp-v6';
 const ASSETS_TO_CACHE = [
     '/',
     '/index.html',
@@ -13,6 +13,7 @@ const ASSETS_TO_CACHE = [
     '/assets/hair/hair4.svg',
     '/assets/hair/hair5.svg',
     '/assets/hair/hair6.svg',
+    '/assets/hair/hair7.svg',
     '/assets/shirt/shirt1.svg',
 ...
     '/assets/shirt/shirt3.svg',
