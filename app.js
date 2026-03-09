@@ -21,42 +21,30 @@ const svgCache = {};
 async function getSvg(url) {
     if (svgCache[url]) return svgCache[url];
     try {
-        const response = await fetch(url);
+        const response = await fetch(url + '?v=11'); // Prevent cache
         const text = await response.text();
         svgCache[url] = text;
         return text;
     } catch (e) {
-        console.error("Failed to load SVG:", url, e);
         return "";
     }
 }
 
 async function updatePreview() {
-    console.log('--- Updating Preview ---');
-    console.log('Current State:', JSON.stringify(state));
-    
     // 1. Update Base
-    const baseUrl = `assets/${assets.base[state.base]}`;
-    document.getElementById('layer-base').style.backgroundImage = `url('${baseUrl}')`;
+    document.getElementById('layer-base').innerHTML = await getSvg(`assets/${assets.base[state.base]}`);
 
-    // 2. Update Face (using Injection)
-    const faceUrl = `assets/face/${assets.face[state.face]}`;
-    const faceSvg = await getSvg(faceUrl);
-    const encodedFace = btoa(faceSvg);
-    document.getElementById('layer-face').style.backgroundImage = `url('data:image/svg+xml;base64,${encodedFace}')`;
+    // 2. Update Face
+    document.getElementById('layer-face').innerHTML = await getSvg(`assets/face/${assets.face[state.face]}`);
 
-    // 3. Update Hair (using Injection for color)
-    const hairUrl = `assets/hair/${assets.hair[state.hair]}`;
-    const hairSvg = await getSvg(hairUrl);
+    // 3. Update Hair (with color)
+    let hairSvg = await getSvg(`assets/hair/${assets.hair[state.hair]}`);
     const coloredHairSvg = hairSvg.replace(/var\(--hair-color\)/g, assets.hairColors[state.hairColor]);
-    const encodedHair = btoa(coloredHairSvg);
-    document.getElementById('layer-hair').style.backgroundImage = `url('data:image/svg+xml;base64,${encodedHair}')`;
+    document.getElementById('layer-hair').innerHTML = coloredHairSvg;
 
     // 4. Update Shirt & Pants
-    document.getElementById('layer-shirt').style.backgroundImage = `url('assets/shirt/${assets.shirt[state.shirt]}')`;
-    document.getElementById('layer-pants').style.backgroundImage = `url('assets/pants/${assets.pants[state.pants]}')`;
-    
-    console.log('Preview Updated Successfully');
+    document.getElementById('layer-shirt').innerHTML = await getSvg(`assets/shirt/${assets.shirt[state.shirt]}`);
+    document.getElementById('layer-pants').innerHTML = await getSvg(`assets/pants/${assets.pants[state.pants]}`);
 }
 
 function handleControlClick(event) {
@@ -67,8 +55,6 @@ function handleControlClick(event) {
     const isNext = event.target.classList.contains('next');
     const isPrev = event.target.classList.contains('prev');
 
-    console.log(`Button Clicked: ${category} (${isNext ? 'next' : 'prev'})`);
-
     let arrayLength;
     if (category === 'hairColor') {
         arrayLength = assets.hairColors.length;
@@ -76,24 +62,19 @@ function handleControlClick(event) {
         arrayLength = assets[category].length;
     }
 
-    const oldVal = state[category];
     if (isNext) {
         state[category] = (state[category] + 1) % arrayLength;
     } else if (isPrev) {
         state[category] = (state[category] - 1 + arrayLength) % arrayLength;
     }
-    
-    console.log(`State Changed: ${category} from ${oldVal} to ${state[category]}`);
 
     updatePreview();
 }
 
 document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('controls').addEventListener('click', handleControlClick);
-    
     document.getElementById('save-btn').addEventListener('click', () => {
-        alert('Character saved! (State: ' + JSON.stringify(state) + ')');
+        alert('Character saved! Version: 11');
     });
-
     updatePreview();
 });
