@@ -2,6 +2,4 @@
   <!-- Boy Body -->
   <rect x="10" y="8" width="12" height="20" fill="#fce4ec" />
   <rect x="12" y="4" width="8" height="8" fill="#fce4ec" />
-  <rect x="13" y="7" width="1" height="1" fill="#000" />
-  <rect x="18" y="7" width="1" height="1" fill="#000" />
 </svg>

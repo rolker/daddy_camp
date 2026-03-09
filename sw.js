@@ -1,4 +1,4 @@
-const CACHE_NAME = 'daddy-camp-v7';
+const CACHE_NAME = 'daddy-camp-v8';
 const ASSETS_TO_CACHE = [
     '/',
     '/index.html',
@@ -7,6 +7,10 @@ const ASSETS_TO_CACHE = [
     '/manifest.json',
     '/assets/base_boy.svg',
     '/assets/base_girl.svg',
+    '/assets/face/face1.svg',
+    '/assets/face/face2.svg',
+    '/assets/face/face3.svg',
+    '/assets/face/face4.svg',
     '/assets/hair/hair1.svg',
     '/assets/hair/hair2.svg',
     '/assets/hair/hair3.svg',
@@ -15,7 +19,7 @@ const ASSETS_TO_CACHE = [
     '/assets/hair/hair6.svg',
     '/assets/hair/hair7.svg',
     '/assets/shirt/shirt1.svg',
-...
+    '/assets/shirt/shirt2.svg',
     '/assets/shirt/shirt3.svg',
     '/assets/pants/pants1.svg',
     '/assets/pants/pants2.svg',

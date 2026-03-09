@@ -1,5 +1,6 @@
 const state = {
     base: 0,
+    face: 0,
     hair: 0,
     hairColor: 0,
     shirt: 0,
@@ -8,6 +9,7 @@ const state = {
 
 const assets = {
     base: ['base_boy.svg', 'base_girl.svg'],
+    face: ['face1.svg', 'face2.svg', 'face3.svg', 'face4.svg'],
     hair: ['hair1.svg', 'hair2.svg', 'hair3.svg', 'hair4.svg', 'hair5.svg', 'hair6.svg', 'hair7.svg'],
     hairColors: ['#5d4037', '#fbc02d', '#ef5350', '#8d6e63', '#ec407a', '#3e2723', '#000000', '#ffffff', '#9c27b0', '#00bcd4'],
     shirt: ['shirt1.svg', 'shirt2.svg', 'shirt3.svg'],
@@ -32,7 +34,11 @@ async function updatePreview() {
     const baseUrl = `assets/${assets.base[state.base]}`;
     document.getElementById('layer-base').style.backgroundImage = `url('${baseUrl}')`;
 
-    // 2. Update Hair (with color injection)
+    // 2. Update Face
+    const faceUrl = `assets/face/${assets.face[state.face]}`;
+    document.getElementById('layer-face').style.backgroundImage = `url('${faceUrl}')`;
+
+    // 3. Update Hair (with color injection)
     const hairUrl = `assets/hair/${assets.hair[state.hair]}`;
     let hairSvg = await getSvg(hairUrl);
     
@@ -43,7 +49,7 @@ async function updatePreview() {
     const encodedHair = btoa(coloredHairSvg);
     document.getElementById('layer-hair').style.backgroundImage = `url('data:image/svg+xml;base64,${encodedHair}')`;
 
-    // 3. Update Shirt & Pants
+    // 4. Update Shirt & Pants
     document.getElementById('layer-shirt').style.backgroundImage = `url('assets/shirt/${assets.shirt[state.shirt]}')`;
     document.getElementById('layer-pants').style.backgroundImage = `url('assets/pants/${assets.pants[state.pants]}')`;
 }
