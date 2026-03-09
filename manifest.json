@@ -1,0 +1,17 @@
+{
+  "name": "Daddy Camp",
+  "short_name": "Daddy Camp",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#2c3e50",
+  "description": "2D character generator and virtual sandbox.",
+  "orientation": "portrait",
+  "theme_color": "#4CAF50",
+  "icons": [
+    {
+      "src": "icons/icon-192.svg",
+      "sizes": "192x192",
+      "type": "image/svg+xml"
+    }
+  ]
+}

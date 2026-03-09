@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Daddy Camp</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#4CAF50">
+    <link rel="apple-touch-icon" href="icons/icon-192.svg">
+</head>
+<body>
+    <div id="app">
+        <header>
+            <h1>Daddy Camp</h1>
+        </header>
+
+        <main>
+            <div id="character-preview">
+                <div class="layer" id="layer-base"></div>
+                <div class="layer" id="layer-hair"></div>
+                <div class="layer" id="layer-shirt"></div>
+                <div class="layer" id="layer-pants"></div>
+            </div>
+
+            <div id="controls">
+                <div class="control-group" data-category="hair">
+                    <button class="prev">&lt;</button>
+                    <span class="label">Hair</span>
+                    <button class="next">&gt;</button>
+                </div>
+                <div class="control-group" data-category="shirt">
+                    <button class="prev">&lt;</button>
+                    <span class="label">Shirt</span>
+                    <button class="next">&gt;</button>
+                </div>
+                <div class="control-group" data-category="pants">
+                    <button class="prev">&lt;</button>
+                    <span class="label">Pants</span>
+                    <button class="next">&gt;</button>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <button id="save-btn">Save Character</button>
+        </footer>
+    </div>
+    <script src="app.js"></script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js');
+            });
+        }
+    </script>
+</body>
+</html>
