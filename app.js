@@ -13,6 +13,7 @@ const assets = {
 };
 
 function updatePreview() {
+    console.log('Updating preview with state:', state);
     document.getElementById('layer-base').style.backgroundImage = `url('assets/${assets.base[state.base]}')`;
     document.getElementById('layer-hair').style.backgroundImage = `url('assets/hair/${assets.hair[state.hair]}')`;
     document.getElementById('layer-shirt').style.backgroundImage = `url('assets/shirt/${assets.shirt[state.shirt]}')`;
