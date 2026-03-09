@@ -1,22 +1,22 @@
 const state = {
+    base: 0,
     hair: 0,
     shirt: 0,
     pants: 0
 };
 
 const assets = {
+    base: ['base_boy.svg', 'base_girl.svg'],
     hair: ['hair1.svg', 'hair2.svg', 'hair3.svg'],
     shirt: ['shirt1.svg', 'shirt2.svg', 'shirt3.svg'],
     pants: ['pants1.svg', 'pants2.svg', 'pants3.svg']
 };
 
 function updatePreview() {
+    document.getElementById('layer-base').style.backgroundImage = `url('assets/${assets.base[state.base]}')`;
     document.getElementById('layer-hair').style.backgroundImage = `url('assets/hair/${assets.hair[state.hair]}')`;
     document.getElementById('layer-shirt').style.backgroundImage = `url('assets/shirt/${assets.shirt[state.shirt]}')`;
     document.getElementById('layer-pants').style.backgroundImage = `url('assets/pants/${assets.pants[state.pants]}')`;
-    
-    // Base layer is always the same for now
-    document.getElementById('layer-base').style.backgroundImage = `url('assets/base.svg')`;
 }
 
 function handleControlClick(event) {
