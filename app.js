@@ -16,42 +16,47 @@ const assets = {
     pants: ['pants1.svg', 'pants2.svg', 'pants3.svg']
 };
 
-// Cache for SVG text to avoid repeated network requests
 const svgCache = {};
 
 async function getSvg(url) {
     if (svgCache[url]) return svgCache[url];
-    const response = await fetch(url);
-    const text = await response.text();
-    svgCache[url] = text;
-    return text;
+    try {
+        const response = await fetch(url);
+        const text = await response.text();
+        svgCache[url] = text;
+        return text;
+    } catch (e) {
+        console.error("Failed to load SVG:", url, e);
+        return "";
+    }
 }
 
 async function updatePreview() {
-    console.log('Updating preview with state:', state);
+    console.log('--- Updating Preview ---');
+    console.log('Current State:', JSON.stringify(state));
     
     // 1. Update Base
     const baseUrl = `assets/${assets.base[state.base]}`;
     document.getElementById('layer-base').style.backgroundImage = `url('${baseUrl}')`;
 
-    // 2. Update Face
+    // 2. Update Face (using Injection)
     const faceUrl = `assets/face/${assets.face[state.face]}`;
-    document.getElementById('layer-face').style.backgroundImage = `url('${faceUrl}')`;
+    const faceSvg = await getSvg(faceUrl);
+    const encodedFace = btoa(faceSvg);
+    document.getElementById('layer-face').style.backgroundImage = `url('data:image/svg+xml;base64,${encodedFace}')`;
 
-    // 3. Update Hair (with color injection)
+    // 3. Update Hair (using Injection for color)
     const hairUrl = `assets/hair/${assets.hair[state.hair]}`;
-    let hairSvg = await getSvg(hairUrl);
-    
-    // Replace the color variable in the SVG string
+    const hairSvg = await getSvg(hairUrl);
     const coloredHairSvg = hairSvg.replace(/var\(--hair-color\)/g, assets.hairColors[state.hairColor]);
-    
-    // Convert to Data URI so it works as a background image
     const encodedHair = btoa(coloredHairSvg);
     document.getElementById('layer-hair').style.backgroundImage = `url('data:image/svg+xml;base64,${encodedHair}')`;
 
     // 4. Update Shirt & Pants
     document.getElementById('layer-shirt').style.backgroundImage = `url('assets/shirt/${assets.shirt[state.shirt]}')`;
     document.getElementById('layer-pants').style.backgroundImage = `url('assets/pants/${assets.pants[state.pants]}')`;
+    
+    console.log('Preview Updated Successfully');
 }
 
 function handleControlClick(event) {
@@ -62,6 +67,8 @@ function handleControlClick(event) {
     const isNext = event.target.classList.contains('next');
     const isPrev = event.target.classList.contains('prev');
 
+    console.log(`Button Clicked: ${category} (${isNext ? 'next' : 'prev'})`);
+
     let arrayLength;
     if (category === 'hairColor') {
         arrayLength = assets.hairColors.length;
@@ -69,11 +76,14 @@ function handleControlClick(event) {
         arrayLength = assets[category].length;
     }
 
+    const oldVal = state[category];
     if (isNext) {
         state[category] = (state[category] + 1) % arrayLength;
     } else if (isPrev) {
         state[category] = (state[category] - 1 + arrayLength) % arrayLength;
     }
+    
+    console.log(`State Changed: ${category} from ${oldVal} to ${state[category]}`);
 
     updatePreview();
 }
