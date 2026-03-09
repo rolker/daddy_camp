@@ -58,6 +58,12 @@ header h1 {
     image-rendering: crisp-edges;
 }
 
+#layer-base { z-index: 1; }
+#layer-face { z-index: 2; }
+#layer-shirt { z-index: 3; }
+#layer-pants { z-index: 4; }
+#layer-hair { z-index: 5; }
+
 #controls {
     display: flex;
     flex-direction: column;
