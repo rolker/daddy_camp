@@ -65,5 +65,8 @@ node_modules/
 # dotenv environment variables file
 .env
 
+# Local Firebase config (copy config.example.js → config.js and fill in values)
+config.js
+
 # dataconnect generated files
 .dataconnect
