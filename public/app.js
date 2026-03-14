@@ -1,9 +1,8 @@
-// Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import { firebaseConfig } from "./config.js";
+import { assets, cycleIndex, applyHairColor } from "./lib.js";
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 
@@ -16,21 +15,12 @@ const state = {
     pants: 0
 };
 
-const assets = {
-    base: ['base_boy.svg', 'base_girl.svg'],
-    face: ['face1.svg', 'face2.svg', 'face3.svg', 'face4.svg'],
-    hair: ['hair1.svg', 'hair2.svg', 'hair3.svg', 'hair4.svg', 'hair5.svg', 'hair6.svg', 'hair7.svg'],
-    hairColors: ['#5d4037', '#fbc02d', '#ef5350', '#8d6e63', '#ec407a', '#3e2723', '#000000', '#ffffff', '#9c27b0', '#00bcd4'],
-    shirt: ['shirt1.svg', 'shirt2.svg', 'shirt3.svg'],
-    pants: ['pants1.svg', 'pants2.svg', 'pants3.svg']
-};
-
 const svgCache = {};
 
 async function getSvg(url) {
     if (svgCache[url]) return svgCache[url];
     try {
-        const response = await fetch(url + '?v=12'); // Prevent cache
+        const response = await fetch(url + '?v=12');
         const text = await response.text();
         svgCache[url] = text;
         return text;
@@ -40,18 +30,12 @@ async function getSvg(url) {
 }
 
 async function updatePreview() {
-    // 1. Update Base
     document.getElementById('layer-base').innerHTML = await getSvg(`assets/base/${assets.base[state.base]}`);
-
-    // 2. Update Face
     document.getElementById('layer-face').innerHTML = await getSvg(`assets/face/${assets.face[state.face]}`);
 
-    // 3. Update Hair (with color)
-    let hairSvg = await getSvg(`assets/hair/${assets.hair[state.hair]}`);
-    const coloredHairSvg = hairSvg.replace(/var\(--hair-color\)/g, assets.hairColors[state.hairColor]);
-    document.getElementById('layer-hair').innerHTML = coloredHairSvg;
+    const hairSvg = await getSvg(`assets/hair/${assets.hair[state.hair]}`);
+    document.getElementById('layer-hair').innerHTML = applyHairColor(hairSvg, assets.hairColors[state.hairColor]);
 
-    // 4. Update Shirt & Pants
     document.getElementById('layer-shirt').innerHTML = await getSvg(`assets/shirt/${assets.shirt[state.shirt]}`);
     document.getElementById('layer-pants').innerHTML = await getSvg(`assets/pants/${assets.pants[state.pants]}`);
 }
@@ -64,18 +48,10 @@ function handleControlClick(event) {
     const isNext = event.target.classList.contains('next');
     const isPrev = event.target.classList.contains('prev');
 
-    let arrayLength;
-    if (category === 'hairColor') {
-        arrayLength = assets.hairColors.length;
-    } else {
-        arrayLength = assets[category].length;
-    }
+    const length = category === 'hairColor' ? assets.hairColors.length : assets[category].length;
 
-    if (isNext) {
-        state[category] = (state[category] + 1) % arrayLength;
-    } else if (isPrev) {
-        state[category] = (state[category] - 1 + arrayLength) % arrayLength;
-    }
+    if (isNext) state[category] = cycleIndex(state[category], length, 'next');
+    else if (isPrev) state[category] = cycleIndex(state[category], length, 'prev');
 
     updatePreview();
 }
