@@ -1,10 +1,29 @@
-const CACHE_NAME = 'daddy-camp-v11';
+const CACHE_NAME = 'daddy-camp-v14'; // Changed version to v14
 const ASSETS_TO_CACHE = [
     '/',
     '/index.html',
     '/style.css',
     '/app.js',
-    '/manifest.json'
+    '/manifest.json',
+    '/assets/base/base_boy.svg',
+    '/assets/base/base_girl.svg',
+    '/assets/face/face1.svg',
+    '/assets/face/face2.svg',
+    '/assets/face/face3.svg',
+    '/assets/face/face4.svg',
+    '/assets/hair/hair1.svg',
+    '/assets/hair/hair2.svg',
+    '/assets/hair/hair3.svg',
+    '/assets/hair/hair4.svg',
+    '/assets/hair/hair5.svg',
+    '/assets/hair/hair6.svg',
+    '/assets/hair/hair7.svg',
+    '/assets/pants/pants1.svg',
+    '/assets/pants/pants2.svg',
+    '/assets/pants/pants3.svg',
+    '/assets/shirt/shirt1.svg',
+    '/assets/shirt/shirt2.svg',
+    '/assets/shirt/shirt3.svg'
 ];
 
 self.addEventListener('install', (event) => {
@@ -21,7 +40,9 @@ self.addEventListener('activate', (event) => {
         caches.keys().then((cacheNames) => {
             return Promise.all(
                 cacheNames.map((cacheName) => {
-                    return caches.delete(cacheName); // FORCE DELETE EVERYTHING
+                    if (cacheName !== CACHE_NAME) {
+                        return caches.delete(cacheName);
+                    }
                 })
             );
         })
@@ -29,5 +50,9 @@ self.addEventListener('activate', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
-    event.respondWith(fetch(event.request)); // TEMPORARILY DISABLE OFFLINE FOR TESTING
+    event.respondWith(
+        caches.match(event.request, { ignoreSearch: true }).then((response) => {
+            return response || fetch(event.request);
+        })
+    );
 });

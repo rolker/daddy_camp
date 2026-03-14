@@ -43,7 +43,7 @@ const svgCache = {};
 async function getSvg(url) {
     if (svgCache[url]) return svgCache[url];
     try {
-        const response = await fetch(url + '?v=11'); // Prevent cache
+        const response = await fetch(url + '?v=12'); // Prevent cache
         const text = await response.text();
         svgCache[url] = text;
         return text;
@@ -54,7 +54,7 @@ async function getSvg(url) {
 
 async function updatePreview() {
     // 1. Update Base
-    document.getElementById('layer-base').innerHTML = await getSvg(`assets/${assets.base[state.base]}`);
+    document.getElementById('layer-base').innerHTML = await getSvg(`assets/base/${assets.base[state.base]}`);
 
     // 2. Update Face
     document.getElementById('layer-face').innerHTML = await getSvg(`assets/face/${assets.face[state.face]}`);
@@ -96,7 +96,7 @@ function handleControlClick(event) {
 document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('controls').addEventListener('click', handleControlClick);
     document.getElementById('save-btn').addEventListener('click', () => {
-        alert('Character saved! Version: 11');
+        alert('Character saved! Version: 12');
     });
     updatePreview();
 });
